@@ -48,11 +48,11 @@ export default class CreatePost extends Component {
                                         <form onSubmit={this.handleSubmit}>
                                             <h3>Create post</h3>
                                             <div className='form-group'>
-                                                <label for="title">Title</label>
+                                                <label htmlFor="title">Title</label>
                                                 <input id="title" className='form-control' type='text' onChange={(e)=>this.handleInput('title',e)} /><br />
                                             </div>
                                             <div className='form-group'>
-                                                <label for="text">Text</label>
+                                                <label htmlFor="text">Text</label>
                                                 <textarea id='text' rows="12" className='form-control' onChange={(e)=>this.handleInput('text',e)}></textarea><br />                  
                                             </div>                   
                                             <input className='btn btn-dark' type="submit" value="Add" />

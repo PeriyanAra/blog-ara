@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '../Navbar';
 
 export default class SinglePost extends Component { 
@@ -9,6 +10,8 @@ export default class SinglePost extends Component {
             post: '',
             user_id: ''
         }
+
+        this.deletePost = this.deletePost.bind(this);
     }
 
     componentDidMount() {
@@ -16,7 +19,16 @@ export default class SinglePost extends Component {
         axios.get(`/api/posts/${this.state.post_id}`).then((response) => {
             const post = response.data;
             this.setState({post: post[0]});
-            console.log(post)
+        }).catch((error) => {
+            console.log(error);
+        })
+
+    }
+
+    deletePost() {
+        
+        axios.delete(`/api/posts/${this.state.post_id}`).then((response) => {
+            this.props.history.push(`/`);
         }).catch((error) => {
             console.log(error);
         })
@@ -25,9 +37,12 @@ export default class SinglePost extends Component {
 
     render() {
         const {post} = this.state;
-        const editBtn = post.user_id == localStorage.getItem('id') ?
-                            ( <a className="btn btn-dark" href={`/posts/${this.state.post_id}/edit`}>Edit</a> ):
+        const editBtn = (post.user_id == localStorage.getItem('id'))?
+                            ( <Link to={`/posts/${this.state.post_id}/edit`} className="btn btn-dark">Edit</Link> ):
                             undefined;
+        const deleteBtn = (post.user_id == localStorage.getItem('id'))?
+                            ( <button className="btn btn-dark" onClick={this.deletePost}>Delete</button> ):
+                            undefined;                    
 
         return(
             <div>
@@ -39,7 +54,8 @@ export default class SinglePost extends Component {
                     <h6>Posted by {post.name} ({post.created_at})</h6>
                 </div><br /><br />
                 
-                {editBtn}                
+                {editBtn}   
+                {deleteBtn}             
             </div>
         )
     }

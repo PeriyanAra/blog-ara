@@ -13,17 +13,15 @@ use Illuminate\Http\Request;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 // User login register routes
 Route::post('register', 'API\LoginController@register');
 Route::post('auth', 'API\LoginController@login');
-Route::get('logout', 'API\LoginController@logout');
+Route::post('/ifAdmin', 'API\UsersController@ifAdmin');
 
-// Posts routes
+// Resource routes
 Route::resource('/posts', 'API\PostsController');
+Route::resource('/users', 'API\UsersController');
+Route::resource('/categories', 'API\CategoriesController');
 
 
 
@@ -32,11 +30,13 @@ Route::resource('/posts', 'API\PostsController');
 
 
 
-// Route::group(['middleware' => ['auth:api']], function(){
+Route::group(['middleware' => ['auth:api']], function(){
 
-//     Route::get('/user', 'UserController@details');
-   
-// })
+    Route::get('/user', 'UserController@details');
+    Route::get('/logout', 'API\LoginController@logout');
+
+    
+});
 
 
 

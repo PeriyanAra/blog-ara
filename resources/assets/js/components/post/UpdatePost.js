@@ -10,6 +10,9 @@ export default class UpdatePost extends Component {
             post: '',
             user_id: ''
         }
+
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleInput = this.handleInput.bind(this);
     }
 
     componentDidMount() {
@@ -35,15 +38,15 @@ export default class UpdatePost extends Component {
         /*A call back to the onAdd props. The current
          *state is passed as a param
          */
-        // axios.put(`/api/posts/${this.state.post_id}`, { 
-        //     title: 'lavaaaa'
-        // }).then(response => {
-        //     this.props.history.push(`/`);
-        // }).catch(err => {
-        //     console.log(err)
-        // });
+        axios.put(`/api/posts/${this.state.post_id}`, { 
+            title: this.state.post.title,
+            text: this.state.post.text
+        }).then(response => {
+            this.props.history.push(`/`);
+        }).catch(err => {
+            console.log(err)
+        });
         
-        console.log(this.props.match)
     }
 
     render() {
@@ -52,11 +55,11 @@ export default class UpdatePost extends Component {
                     ( <form onSubmit={this.handleSubmit}>
                         <h3>Create post</h3>
                         <div className='form-group'>
-                                                    <label for="title">Title</label>
+                                                    <label htmlFor="title">Title</label>
                                                     <input id="title" className='form-control' type='text' value={post.title} onChange={(e)=>this.handleInput('title',e)} /><br />
                         </div>
                         <div className='form-group'>
-                                                    <label for="text">Text</label>
+                                                    <label htmlFor="text">Text</label>
                                                     <textarea id='text' rows="12" className='form-control' value={post.text} onChange={(e)=>this.handleInput('text',e)}></textarea><br />                  
                         </div>                   
                         <input className='btn btn-dark' type="submit" value="Add" />

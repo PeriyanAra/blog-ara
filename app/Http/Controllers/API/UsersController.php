@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\API;
 
-use App\User;
-use App\Post;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\User;
+use App\Post;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
-class PostsController extends Controller
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,11 +18,7 @@ class PostsController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($request->headers->all());
-        return $posts = DB::table('posts')
-                                ->join('users', 'posts.user_id', '=', 'users.id')
-                                ->select('posts.id as post_id', 'posts.title', 'posts.text', 'posts.created_at', 'posts.updated_at', 'users.id as user_id', 'users.name')
-                                ->get();
+        return User::all();
     }
 
     /**
@@ -42,13 +39,7 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        $post = new Post;
-        $post->user_id = $request->user_id;
-        $post->title = $request->title;
-        $post->text = $request->text;
-        $post->save();
-        
-        return $post;
+        //
     }
 
     /**
@@ -59,13 +50,15 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        if(Post::find($id)){
-            return $posts2 = DB::table('posts')
-                                ->join('users', 'posts.user_id', '=', 'users.id')
-                                ->select('posts.id as post_id', 'posts.title', 'posts.text', 'posts.created_at', 'posts.updated_at', 'users.id as user_id', 'users.name')
-                                ->where('posts.id', '=', $id)
-                                ->get();
-        }
+        $user = User::find($id); 
+        $posts = DB::table('posts')->where('user_id', $id)->get();
+
+        return response()->json(
+            ['status' => 200,
+             'resource' => [
+                 'user' => $user,
+                 'posts' => $posts
+             ]]);
     }
 
     /**
@@ -88,8 +81,8 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Post::where('id', $id)
-            ->update(['title' => $request->title]);
+        User::where('id', $id)
+            ->update(['name' => $request->name, 'email' => $request->email]);
     }
 
     /**
@@ -100,6 +93,19 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        Post::destroy($id);
+        DB::table('posts')->where('user_id', $id)->delete();
+        User::destroy($id);
+    }
+
+    /*
+     * Is checking if the user is admin or not
+     * 
+     * @param  int  $id
+     */
+    public function ifAdmin(Request $request)
+    {
+        if(User::find($request->id)){
+            return User::find($request->id)->role;
+        }
     }
 }

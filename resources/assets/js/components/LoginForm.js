@@ -30,6 +30,7 @@ export default class Login extends Component {
            }
        })
        .then(res => {
+           axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token;
            localStorage.setItem("name", res.data.user.name);
            localStorage.setItem("id", res.data.user.id);
            localStorage.setItem("token", res.data.token);

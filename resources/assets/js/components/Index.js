@@ -8,6 +8,10 @@ import Navbar from './Navbar';
 import CreatePost from './post/CreatePost';
 import SinglePost from './post/SinglePost';
 import UpdatePost from './post/UpdatePost';
+import UsersList from './users/UsersList';
+import SingleUser from './users/SingleUser';
+import UpdateUser from './users/UpdateUser';
+import CategoriesList from './category/CategoriesList';
 
 export default class Index extends Component {    
     constructor(props) {
@@ -20,8 +24,7 @@ export default class Index extends Component {
     componentDidMount() {
             axios.get('/api/posts').then((response) => {
                 const posts = response.data;
-                this.setState({posts: posts});   
-                console.log(posts);             
+                this.setState({posts: posts});             
             }).catch((error) => {
     
             })
@@ -35,7 +38,7 @@ export default class Index extends Component {
                                         undefined
         return (
             this.state.posts && <div>
-                                    <Navbar />
+                                    <Navbar history={this.props.history} />
 
                                     <h1>All posts</h1>
                                     { addBtn }
@@ -46,7 +49,7 @@ export default class Index extends Component {
                                                 <div className='card' key={ index }>
                                                     <h2 className='card-title'><a href={`/posts/${value.post_id}`}>{ value.title }</a></h2>
                                                     <p className='card-body'>{ value.text }</p>
-                                                    <h6>Created by { value.name }</h6>
+                                                    <h6>Created by <a href={`/users/${value.user_id}`}>{ value.name }</a></h6>
                                                 </div>
                                             )
                                         })}
@@ -60,13 +63,21 @@ export default class Index extends Component {
 if (document.getElementById('root')) {
     ReactDOM.render(<Router>
         <Switch>
+            {/* Post routes */}
             <Route exact path='/' component={ Index } />
             <Route exact path='/posts' component={ Index }/>
             <Route exact path='/posts/create' component={ CreatePost } /> 
             <Route exact path='/posts/:id' component={ SinglePost } />   
-            <Route path='/posts/:id/edit' component={ UpdatePost } />        
-            <Route path='/register' component={ RegisterForm } />
-            <Route path='/login' component={ LoginForm } />
+            <Route exact path='/posts/:id/edit' component={ UpdatePost } />        
+            {/* Auth routes */}
+            <Route exact path='/register' component={ RegisterForm } />
+            <Route exact path='/login' component={ LoginForm } />
+            {/* Users routes */}
+            <Route exact path='/users' component={ UsersList }/>
+            <Route exact path='/users/:id' component={ SingleUser }/>
+            <Route exact path='/users/:id/edit' component={ UpdateUser } />
+            {/* Categories routes */}
+            <Route exact path='/categories' component={ CategoriesList }/>
         </Switch>
     </Router>, document.getElementById('root'));
 }

@@ -2,26 +2,20 @@
 
 namespace App\Http\Controllers\API;
 
-use App\User;
-use App\Post;
-use Illuminate\Support\Facades\DB;
+use App\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class PostsController extends Controller
+class CategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        // dd($request->headers->all());
-        return $posts = DB::table('posts')
-                                ->join('users', 'posts.user_id', '=', 'users.id')
-                                ->select('posts.id as post_id', 'posts.title', 'posts.text', 'posts.created_at', 'posts.updated_at', 'users.id as user_id', 'users.name')
-                                ->get();
+        return Category::all();
     }
 
     /**
@@ -42,13 +36,7 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        $post = new Post;
-        $post->user_id = $request->user_id;
-        $post->title = $request->title;
-        $post->text = $request->text;
-        $post->save();
-        
-        return $post;
+        //
     }
 
     /**
@@ -59,13 +47,7 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        if(Post::find($id)){
-            return $posts2 = DB::table('posts')
-                                ->join('users', 'posts.user_id', '=', 'users.id')
-                                ->select('posts.id as post_id', 'posts.title', 'posts.text', 'posts.created_at', 'posts.updated_at', 'users.id as user_id', 'users.name')
-                                ->where('posts.id', '=', $id)
-                                ->get();
-        }
+        //
     }
 
     /**
@@ -88,8 +70,7 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Post::where('id', $id)
-            ->update(['title' => $request->title]);
+        //
     }
 
     /**
@@ -100,6 +81,6 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        Post::destroy($id);
+        //
     }
 }
