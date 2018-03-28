@@ -2,19 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Category;
+use App\Comment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CategoryStoreRequest;
 
-class CategoriesController extends Controller
+class CommentController extends Controller
 {
-
-    public function __construct(Category $category)
-    {
-        $this->category = $category;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +15,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        return Category::all();
+        return Comment::all();
     }
 
     /**
@@ -41,10 +34,17 @@ class CategoriesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CategoryStoreRequest $request)
+    public function store(Request $request)
     {
-        $category = $this->category->create($request->inputs());        
-        return $category;
+        // $user_id = Auth::id(); 
+        
+        $comment = new Comment;
+        $comment->text = $request->text;
+        $comment->user_id = $request->user_id;
+        $comment->post_id = $request->post_id;
+        $comment->save();
+        
+        return $comment;
     }
 
     /**
@@ -55,7 +55,7 @@ class CategoriesController extends Controller
      */
     public function show($id)
     {
-        return Category::find($id);
+        return Comment::find($id);
     }
 
     /**
@@ -78,8 +78,11 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Category::where('id', $id)
-            ->update(['name' => $request->name]);
+        $comment->text = $request->text;
+        $comment->user_id = $request->user_id;
+        $comment->category_id = $request->category_id;
+        $comment->save();
+        return $comment;
     }
 
     /**
@@ -90,6 +93,6 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        Category::destroy($id);
+        Comment::destroy($id);
     }
 }

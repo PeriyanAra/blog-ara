@@ -17,11 +17,12 @@ class PostsController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($request->headers->all());
-        return $posts = DB::table('posts')
-                                ->join('users', 'posts.user_id', '=', 'users.id')
-                                ->select('posts.id as post_id', 'posts.title', 'posts.text', 'posts.created_at', 'posts.updated_at', 'users.id as user_id', 'users.name')
-                                ->get();
+        $posts = Post::all();
+        foreach ($posts as $post) {
+            $post->category;
+            $post->user;
+        }
+        return $posts;
     }
 
     /**
@@ -46,6 +47,7 @@ class PostsController extends Controller
         $post->user_id = $request->user_id;
         $post->title = $request->title;
         $post->text = $request->text;
+        $post->category_id = $request->category_id;
         $post->save();
         
         return $post;
@@ -57,15 +59,15 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
-        if(Post::find($id)){
-            return $posts2 = DB::table('posts')
-                                ->join('users', 'posts.user_id', '=', 'users.id')
-                                ->select('posts.id as post_id', 'posts.title', 'posts.text', 'posts.created_at', 'posts.updated_at', 'users.id as user_id', 'users.name')
-                                ->where('posts.id', '=', $id)
-                                ->get();
-        }
+        // return $request->bearerToken();
+
+        $post = Post::find($id);
+        $post->category;
+        $post->user;
+        $post->comments;
+        return $post;
     }
 
     /**
@@ -89,7 +91,7 @@ class PostsController extends Controller
     public function update(Request $request, $id)
     {
         Post::where('id', $id)
-            ->update(['title' => $request->title]);
+            ->update(['title' => $request->title, 'text' => $request->text]);
     }
 
     /**

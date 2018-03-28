@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Navbar from './Navbar';
 
 export default class RegisterForm extends Component {
 
@@ -43,8 +42,6 @@ export default class RegisterForm extends Component {
     render() {
         return (
             <div>
-                <Navbar />
-
                 <form onSubmit={this.handleSubmit}>
                     <h3>Register form</h3>
 

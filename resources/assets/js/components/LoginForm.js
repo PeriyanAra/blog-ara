@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Axios from 'axios';
-import Navbar from './Navbar';
 
 
 export default class Login extends Component {
@@ -49,8 +48,6 @@ export default class Login extends Component {
    render(){
        return (
            <div>
-               <Navbar />
-
                <form onSubmit={this.submit}>
                    <input value={this.state.email} onChange={this.email} type="email" placeholder="email"></input> <br/>
                    <input value={this.state.password} onChange={this.password} type="password" placeholder="password"></input> <br/>

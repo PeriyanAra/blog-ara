@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Navbar from '../Navbar';
 
 export default class SingleUser extends Component { 
     constructor(props) {
@@ -83,8 +82,6 @@ export default class SingleUser extends Component {
 
         return(
             <div>
-                <Navbar /><br/ >
-
                 <div className="card border-secondary mb-3">
                     <div className="card-header"><h2>{user.name}</h2></div>
                     <div className="card-body">

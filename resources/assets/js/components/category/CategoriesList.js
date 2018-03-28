@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Navbar from '../Navbar';
-import { Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom'
 
 export default class CategoriesList extends Component {
     constructor(props) {
@@ -10,6 +9,7 @@ export default class CategoriesList extends Component {
         }
 
         this.ifAdmin = this.ifAdmin.bind(this);
+        this.deleteCategory = this.deleteCategory.bind(this);
     }
 
     ifAdmin() {
@@ -29,12 +29,28 @@ export default class CategoriesList extends Component {
     componentDidMount(){
         this.ifAdmin();
 
+        this.getCategories();
+    }
+
+    getCategories(){
         axios.get('/api/categories').then((response) => {
             const categories = response.data;
             this.setState({categories: categories});             
         }).catch((error) => {
 
         })
+    }
+
+    deleteCategory($id) {
+        
+        axios.delete(`/api/categories/${$id}`)
+        .then((response) => {
+            this.getCategories();
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+
     }
 
     
@@ -50,6 +66,7 @@ export default class CategoriesList extends Component {
                                             <tr>
                                                 <th scope="col">ID</th>
                                                 <th scope="col">Name</th>
+                                                <th scope="col">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -58,19 +75,23 @@ export default class CategoriesList extends Component {
                                                     <tr key={ index }>
                                                         <th scope="row">{value.id}</th>
                                                         <td><a>{value.name}</a></td>
+                                                        <td>
+                                                            <button className="btn btn-dark" onClick={() => this.deleteCategory(value.id)}>Delete</button>
+                                                            <a className="btn btn-dark" href={`categories/${value.id}/edit`}>Edit</a>
+                                                        </td>
                                                     </tr>
                                                 )
                                             })}
                                         </tbody>
                                     </table>
+
+                                    <a className='btn btn-dark' href='/categories/create'>Add Category</a>
                                 </div>
                             ) : 
                             (<h2>You are not authed!!!</h2>)
         
         return (
             <div>
-                <Navbar /><br />
-
                 {result}
             </div>
         )

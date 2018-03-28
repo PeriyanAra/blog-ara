@@ -12,10 +12,6 @@
     </head>
     <body>
         <div id="root"></div>
-
-        <script>
-            let myData = '{{ $anun }}'
-        </script>
         
         <script src="/js/app.js"></script>
     </body>

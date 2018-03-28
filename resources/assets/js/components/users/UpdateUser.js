@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Navbar from '../Navbar';
 import { Redirect } from 'react-router-dom';
 
 export default class UpdateUser extends Component { 
@@ -93,8 +92,6 @@ export default class UpdateUser extends Component {
         
         return(
             <div>
-                <Navbar />
-                
                 {result}
             </div>
         )

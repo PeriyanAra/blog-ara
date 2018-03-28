@@ -15,13 +15,14 @@ use Illuminate\Http\Request;
 
 // User login register routes
 Route::post('register', 'API\LoginController@register');
-Route::post('auth', 'API\LoginController@login');
+Route::post('/auth', 'API\LoginController@login');
 Route::post('/ifAdmin', 'API\UsersController@ifAdmin');
 
 // Resource routes
 Route::resource('/posts', 'API\PostsController');
 Route::resource('/users', 'API\UsersController');
 Route::resource('/categories', 'API\CategoriesController');
+Route::resource('/comments', 'API\CommentController');
 
 
 
@@ -37,6 +38,3 @@ Route::group(['middleware' => ['auth:api']], function(){
 
     
 });
-
-
-

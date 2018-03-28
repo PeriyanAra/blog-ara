@@ -33,14 +33,15 @@ export default class Navbar extends Component {
     }
 
     logout() {
+        localStorage.clear();
         axios.get('/api/logout')
         .then((response) => {
-            localStorage.clear();
-            this.props.history.push(`/`);
+            // localStorage.clear();
+            // this.props.history.push(`/`);
         })
         .catch((err) => {
-            localStorage.clear();
-            console.log(err);
+            // localStorage.clear();
+            // console.log(err);
         })
     }
 

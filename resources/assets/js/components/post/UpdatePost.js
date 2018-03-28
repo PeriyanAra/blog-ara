@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Navbar from '../Navbar';
 import { Redirect } from 'react-router-dom';
 
 export default class UpdatePost extends Component { 
@@ -7,7 +6,10 @@ export default class UpdatePost extends Component {
         super(props);
         this.state = {
             post_id: this.props.match.params.id,
-            post: '',
+            post: {
+                user: {},
+                category: {}
+            },
             user_id: ''
         }
 
@@ -19,10 +21,11 @@ export default class UpdatePost extends Component {
         
         axios.get(`/api/posts/${this.state.post_id}`).then((response) => {
             const post = response.data;
-            this.setState({post: post[0]});
+            this.setState({post: post});
         }).catch((error) => {
             console.log(error);
         })
+
 
     }
 
@@ -40,20 +43,21 @@ export default class UpdatePost extends Component {
          */
         axios.put(`/api/posts/${this.state.post_id}`, { 
             title: this.state.post.title,
-            text: this.state.post.text
+            text: this.state.post.text,
         }).then(response => {
             this.props.history.push(`/`);
         }).catch(err => {
             console.log(err)
         });
-        
+        console.log(this.state.newPost)
     }
 
     render() {
         const {post} = this.state;
-        const check = post.user_id == localStorage.getItem('id') ?
+        const {categories} = this.state;
+        const check = post.user.id == localStorage.getItem('id') ?
                     ( <form onSubmit={this.handleSubmit}>
-                        <h3>Create post</h3>
+                        <h3>Update post</h3>
                         <div className='form-group'>
                                                     <label htmlFor="title">Title</label>
                                                     <input id="title" className='form-control' type='text' value={post.title} onChange={(e)=>this.handleInput('title',e)} /><br />
@@ -70,7 +74,6 @@ export default class UpdatePost extends Component {
         
         return(
             <div>
-                <Navbar />
                 {check}
             </div>
         )

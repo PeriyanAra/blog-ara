@@ -12,6 +12,8 @@ import UsersList from './users/UsersList';
 import SingleUser from './users/SingleUser';
 import UpdateUser from './users/UpdateUser';
 import CategoriesList from './category/CategoriesList';
+import CreateCategory from './category/CreateCategory';
+import UpdateCategory from './category/UpdateCategory';
 
 export default class Index extends Component {    
     constructor(props) {
@@ -31,15 +33,13 @@ export default class Index extends Component {
 
     }    
     
-    render() {  
+    render() { 
         const {posts} = this.state;
         const addBtn = localStorage.getItem('token') ?
                                         (<a href="/posts/create" className='btn btn-dark'>Add post</a>) :
                                         undefined
         return (
             this.state.posts && <div>
-                                    <Navbar history={this.props.history} />
-
                                     <h1>All posts</h1>
                                     { addBtn }
 
@@ -47,9 +47,10 @@ export default class Index extends Component {
                                         {posts.map((value, index) => {
                                             return (
                                                 <div className='card' key={ index }>
-                                                    <h2 className='card-title'><a href={`/posts/${value.post_id}`}>{ value.title }</a></h2>
+                                                    <h2 className='card-title'><a href={`/posts/${value.id}`}>{ value.title }</a></h2>
+                                                    <h5>{ value.category.name }</h5>
                                                     <p className='card-body'>{ value.text }</p>
-                                                    <h6>Created by <a href={`/users/${value.user_id}`}>{ value.name }</a></h6>
+                                                    <h6>Created by <a href={`/users/${value.user.id}`}>{ value.user.name }</a></h6>
                                                 </div>
                                             )
                                         })}
@@ -61,7 +62,10 @@ export default class Index extends Component {
 
 
 if (document.getElementById('root')) {
-    ReactDOM.render(<Router>
+    ReactDOM.render(
+    (<Router> 
+        <div> 
+        <Navbar />      
         <Switch>
             {/* Post routes */}
             <Route exact path='/' component={ Index } />
@@ -78,6 +82,9 @@ if (document.getElementById('root')) {
             <Route exact path='/users/:id/edit' component={ UpdateUser } />
             {/* Categories routes */}
             <Route exact path='/categories' component={ CategoriesList }/>
+            <Route exact path='/categories/:id/edit' component={ UpdateCategory }/>
+            <Route exact path='/categories/create' component={ CreateCategory }/>            
         </Switch>
-    </Router>, document.getElementById('root'));
+        </div>
+    </Router>), document.getElementById('root'));    
 }

@@ -16,12 +16,9 @@ class IfAdmin
      */
     public function handle($request, Closure $next)
     {
-        if (!Auth::check()) {
-            return redirect('/');
-        }
-        else{
+        if (Auth::check() && Auth::user()->role == 'admin') {
             return $next($request);
-        }       
-        
+        }
+        return response()->json(['message' => 'You dont have perrmissions idi nafig'], 401);
     }
 }
