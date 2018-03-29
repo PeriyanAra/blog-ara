@@ -16,7 +16,7 @@ class PostsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
+    {      
         $posts = Post::all();
         foreach ($posts as $post) {
             $post->category;
@@ -43,14 +43,29 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'user_id' => 'required',
+            'title' => 'required',
+            'text' => 'required',
+            'cаtegory_id' => 'required',
+        ]);
+
         $post = new Post;
         $post->user_id = $request->user_id;
         $post->title = $request->title;
         $post->text = $request->text;
         $post->category_id = $request->category_id;
-        $post->save();
         
-        return $post;
+        if($post->save()){
+            return $post;
+        }
+        else{
+            return response()->json([
+                'message' => 'ID must be an integer and larger than 0'
+            ], 400);
+        }
+        
+        
     }
 
     /**
@@ -61,8 +76,16 @@ class PostsController extends Controller
      */
     public function show($id, Request $request)
     {
-        // return $request->bearerToken();
-
+        if($id < 0 || gettype($id) == 'string'){
+            return response()->json([
+                'message' => 'ID must be an integer and larger than 0'
+            ], 400);
+        }
+        else if (!Post::find($id)) {
+            return response()->json([
+                'message' => 'the user has not been found'
+            ], 404);
+        }
         $post = Post::find($id);
         $post->category;
         $post->user;
@@ -90,6 +113,11 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'title' => 'required',
+            'text' => 'required'
+        ]);
+
         Post::where('id', $id)
             ->update(['title' => $request->title, 'text' => $request->text]);
     }
@@ -102,6 +130,16 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
+        if($id < 0 || gettype($id) == 'string'){
+            return response()->json([
+                'message' => 'ID must be an integer and larger than 0'
+            ], 400);
+        }
+        else if (!Post::find($id)) {
+            return response()->json([
+                'message' => 'the user has not been found'
+            ], 404);
+        }
         Post::destroy($id);
     }
 }

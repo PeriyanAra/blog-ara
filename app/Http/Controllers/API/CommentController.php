@@ -36,7 +36,11 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        // $user_id = Auth::id(); 
+        $request->validate([
+            'user_id' => 'required',
+            'text' => 'required',
+            'post_id' => 'required',
+        ]); 
         
         $comment = new Comment;
         $comment->text = $request->text;
@@ -78,9 +82,15 @@ class CommentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'user_id' => 'required',
+            'text' => 'required',
+            'post_id' => 'required',
+        ]);
+        
         $comment->text = $request->text;
         $comment->user_id = $request->user_id;
-        $comment->category_id = $request->category_id;
+        $comment->post_id = $request->post_id;
         $comment->save();
         return $comment;
     }

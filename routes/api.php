@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 
 // User login register routes
-Route::post('register', 'API\LoginController@register');
+Route::post('/register', 'API\LoginController@register');
 Route::post('/auth', 'API\LoginController@login');
 Route::post('/ifAdmin', 'API\UsersController@ifAdmin');
 

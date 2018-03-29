@@ -1,0 +1,229 @@
+openapi: 3.0.0
+info:
+  title: Ara's blog API
+  description: This is the documentation of Ara's blog Laravel backend API
+  version: 1.0.0
+  
+servers:
+  - url: http://blog.ara/api
+    description: Server of blog
+
+tags:
+- name: "post"
+  description: "Everything about your Posts"
+- name: "user"
+  description: "Operations about user"
+
+paths:
+  /posts:
+    get:
+      tags:
+        - "post"
+      summary: Returns all posts 
+      description: Returns all posts, each post has oun category and the user and is showing their information
+      responses:
+        '200':    
+          description: A JSON array of all posts info
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Post'
+    post:
+      tags:
+        - "post"
+      summary: "Add a new post"
+      description: "Add a new post"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                text:
+                  type: string
+                user_id:
+                  type: integer
+                category_id:
+                  type: integer
+      responses: 
+        '201':
+          description: Created
+  /posts/{id}:
+    get:
+      tags:
+        - "post"
+      summary: Returns one post 
+      description: Returns only one post by id sent in path
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':    
+          description: A JSON array of one post
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: Bad request. User ID must be an integer and larger than 0.
+        '404':
+          description: The post with the specified ID was not found.
+    put:
+      tags:
+        - "post"
+      summary: Updates single post
+      parameters: 
+        - in: header
+          name: id
+          schema: 
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                text:
+                  type: string
+                user_id:
+                  type: integer
+                category_id:
+                  type: integer
+      responses:
+        200:
+          description: the upload was successful
+    delete:
+      tags:
+        - "post"
+      summary: Deletes single post
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Pet not found"
+        200:
+          description: OK
+  /register:
+    post:
+      tags:
+        - "user"
+      summary: Registeres new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: integer
+      responses: 
+        201:
+          description: User registered
+  /auth:
+    post:
+      tags: 
+        - "user"
+      summary: Logs in user and returns token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: integer
+      responses: 
+        401:
+          description: "Bad pass or login"
+        200:
+          description: User logged in
+  
+components:
+  schemas:
+    Post:
+      properties:
+        id:
+          type: integer
+          minimum: 1
+        user_id:
+          type: integer
+          minimum: 1
+        category_id:
+          type: integer
+          minimum: 1
+        title:
+          type: string
+          maxLength: 30
+        text:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        category:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            created_at:
+              type: string
+            updated_at:
+              type: string
+          example:
+            id: 1
+            name: 'Cars'
+            created_at: '2018-03-28 08:13:16'
+            updated_at: '2018-03-29 12:25:03'
+          required:
+            - id
+            - name
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            email:
+              type: string
+            role:
+              type: string
+            created_at:
+              type: string
+            updated_at:
+              type: string
+          required: 
+            - id
+            - name
+            - email
+            - role
+      required:  
+        - id
+        - user_id
+        - title
+        - text
