@@ -1,0 +1,488 @@
+openapi: 3.0.0
+info:
+  title: Ara's blog API
+  description: This is the documentation of Ara's blog Laravel backend API
+  version: 1.0.0
+  
+servers:
+  - url: http://blog.ara/api
+    description: Server of blog
+
+tags:
+- name: "post"
+  description: "Everything about your Posts"
+- name: "user"
+  description: "Operations about user"
+- name: "category"
+  description: "Operations with categories"
+- name: 'comment'
+  description: "Operations with comments"
+
+paths:
+  /posts:
+    get:
+      tags:
+        - "post"
+      summary: Returns all posts 
+      description: Returns all posts, each post has oun category and the user and is showing their information
+      responses:
+        200:    
+          description: A JSON array of all posts info
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Post'
+    post:
+      tags:
+        - "post"
+      summary: "Add a new post"
+      description: "Add a new post"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                text:
+                  type: string
+                user_id:
+                  type: integer
+                category_id:
+                  type: integer
+      responses: 
+        201:
+          description: Created
+  /posts/{id}:
+    get:
+      tags:
+        - "post"
+      summary: Returns one post 
+      description: Returns only one post by id sent in path
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:    
+          description: A JSON array of one post
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Post'
+        404:
+          description: The post with the specified ID was not found.
+    put:
+      tags:
+        - "post"
+      summary: Updates single post
+      parameters: 
+        - in: header
+          name: id
+          schema: 
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                text:
+                  type: string
+                user_id:
+                  type: integer
+                category_id:
+                  type: integer
+      responses:
+        200:
+          description: the upload was successful
+    delete:
+      tags:
+        - "post"
+      summary: Deletes single post
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        404:
+          description: "not found"
+        200:
+          description: OK
+  /register:
+    post:
+      tags:
+        - "user"
+      summary: Registeres new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: integer
+      responses: 
+        201:
+          description: User registered
+  /auth:
+    post:
+      tags: 
+        - "user"
+      summary: Logs in user and returns token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: integer
+      responses: 
+        401:
+          description: "Bad pass or login"
+        200:
+          description: User logged in
+  /logout:
+    get:
+      tags:
+        - 'user'
+      summary: Logs out user
+      responses: 
+        200:
+          description: success
+  /users:
+    get:
+      tags:
+        - 'user'
+      summary: Shows list of all users
+      responses:
+        200:    
+          description: A JSON array of all users info
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/User'
+  /users/{id}:
+    get:
+      tags:
+        - 'user'
+      summary: Shows one user by its id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':    
+          description: A JSON array of one user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user: 
+                    $ref: '#/components/schemas/User'
+                  posts:
+                    $ref: '#/components/schemas/Post'
+    put:
+      tags:
+        - "user"
+      summary: Updates single user
+      parameters: 
+        - in: header
+          name: id
+          schema: 
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: the upload was successful
+    delete:
+      tags:
+        - "user"
+      summary: Deletes single user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        404:
+          description: "not found"
+        200:
+          description: OK
+  /categories:
+    get:
+      tags:
+        - "category"
+      summary: Returns list of all categories 
+      responses:
+        '200':    
+          description: A JSON array of all categories info
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Category'
+    post:
+      tags:
+        - "category"
+      summary: Adds new category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses: 
+        '201':
+          description: Created
+  /categories/{id}:
+    get:
+      tags:
+        - 'category'
+      summary: Shows one category by its id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':    
+          description: A JSON array of one user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+    put:
+      tags:
+        - "category"
+      summary: Updates single category
+      parameters: 
+        - in: header
+          name: id
+          schema: 
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        200:
+          description: the upload was successful
+    delete:
+      tags:
+        - "category"
+      summary: Deletes single category
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        404:
+          description: "not found"
+        200:
+          description: OK
+  /comments:
+    post:
+      tags:
+        - "comment"
+      summary: Adds new comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                test:
+                  type: string
+                user_id:
+                  type: integer
+                post_id:
+                  type: integer
+      responses: 
+        '201':
+          description: Created
+  /comments/{id}:
+    get:
+      tags:
+        - 'comment'
+      summary: Shows one comment by its id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':    
+          description: A JSON array of one comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+    delete:
+      tags:
+        - "comment"
+      summary: Deletes single comment
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        404:
+          description: "not found"
+        200:
+          description: OK
+  
+components:
+  schemas:
+    Post:
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        category_id:
+          type: integer
+        title:
+          type: string
+          maxLength: 30
+        text:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        category:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            created_at:
+              type: string
+            updated_at:
+              type: string
+          example:
+            id: 1
+            name: 'Cars'
+            created_at: '2018-03-28 08:13:16'
+            updated_at: '2018-03-29 12:25:03'
+          required:
+            - id
+            - name
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            email:
+              type: string
+            role:
+              type: string
+            created_at:
+              type: string
+            updated_at:
+              type: string
+          required: 
+            - id
+            - name
+            - email
+            - role
+      required:  
+        - id
+        - user_id
+        - title
+        - text
+    User:
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    Category:
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    Comment:
+      properties:
+        id:
+          type: integer
+        text:
+          type: string
+        user_id:
+          type: integer
+        post_id:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            email:
+              type: string
+            role:
+              type: string
+            created_at:
+              type: string
+            updated_at:
+              type: string

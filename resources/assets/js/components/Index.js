@@ -40,7 +40,7 @@ export default class Index extends Component {
                                         undefined
         return (
             this.state.posts && <div>
-                                    <h1>All posts</h1>
+                                    <h1>All posts 2</h1>
                                     { addBtn }
 
                                     <div>

@@ -42,19 +42,17 @@ export default class CreatePost extends Component {
         axios.post('/api/posts', { 
             title: this.state.newPost.title, 
             text: this.state.newPost.text,
-            category_id: this.state.newPost.category_id, 
+            category_id: Number(this.state.newPost.category_id), 
             user_id: localStorage.getItem('id')
         }).then(response => {
             this.props.history.push(`/`);
         }).catch(err => {
             console.log(err)
         });
-        // console.log(this.state.newPost.category_id);
     }
     
     render(){
         const {categories} = this.state;
-        console.log(categories);
         const el = localStorage.getItem('token') ?
                                     (<div>
                                         <form onSubmit={this.handleSubmit}>

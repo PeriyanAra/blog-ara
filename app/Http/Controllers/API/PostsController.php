@@ -43,12 +43,6 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'user_id' => 'required',
-            'title' => 'required',
-            'text' => 'required',
-            'cаtegory_id' => 'required',
-        ]);
 
         $post = new Post;
         $post->user_id = $request->user_id;
@@ -56,14 +50,9 @@ class PostsController extends Controller
         $post->text = $request->text;
         $post->category_id = $request->category_id;
         
-        if($post->save()){
-            return $post;
-        }
-        else{
-            return response()->json([
-                'message' => 'ID must be an integer and larger than 0'
-            ], 400);
-        }
+        $post->save();
+        return $post;
+        
         
         
     }
@@ -76,12 +65,7 @@ class PostsController extends Controller
      */
     public function show($id, Request $request)
     {
-        if($id < 0 || gettype($id) == 'string'){
-            return response()->json([
-                'message' => 'ID must be an integer and larger than 0'
-            ], 400);
-        }
-        else if (!Post::find($id)) {
+        if (!Post::find($id)) {
             return response()->json([
                 'message' => 'the user has not been found'
             ], 404);
@@ -130,12 +114,7 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        if($id < 0 || gettype($id) == 'string'){
-            return response()->json([
-                'message' => 'ID must be an integer and larger than 0'
-            ], 400);
-        }
-        else if (!Post::find($id)) {
+        if (!Post::find($id)) {
             return response()->json([
                 'message' => 'the user has not been found'
             ], 404);

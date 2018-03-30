@@ -15,7 +15,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        return Comment::all();
+        // 
     }
 
     /**
@@ -35,13 +35,7 @@ class CommentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required',
-            'text' => 'required',
-            'post_id' => 'required',
-        ]); 
-        
+    {        
         $comment = new Comment;
         $comment->text = $request->text;
         $comment->user_id = $request->user_id;
@@ -81,13 +75,7 @@ class CommentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'user_id' => 'required',
-            'text' => 'required',
-            'post_id' => 'required',
-        ]);
-        
+    {        
         $comment->text = $request->text;
         $comment->user_id = $request->user_id;
         $comment->post_id = $request->post_id;
